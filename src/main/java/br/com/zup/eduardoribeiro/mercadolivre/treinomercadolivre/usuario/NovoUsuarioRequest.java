@@ -23,23 +23,8 @@ public class NovoUsuarioRequest {
         this.senha = senha;
     }
 
-    public String getLogin() {
-        return login;
-    }
-
-    public String getSenha() {
-        return senha;
-    }
-
     public Usuario converterParaModel() {
         return new Usuario(this.login, this.senha);
     }
 
-    @Override
-    public String toString() {
-        return "NovoUsuarioRequest{" +
-                "login='" + login + '\'' +
-                ", senha='" + senha + '\'' +
-                '}';
-    }
 }
