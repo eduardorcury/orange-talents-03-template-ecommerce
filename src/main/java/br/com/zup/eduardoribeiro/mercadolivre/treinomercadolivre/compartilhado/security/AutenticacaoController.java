@@ -32,12 +32,10 @@ public class AutenticacaoController {
         try {
             Authentication auth = manager.authenticate(dadosLogin);
             String token = service.gerarToken(auth);
-            System.out.println(token);
             return ResponseEntity.ok(new TokenResponse(token, "Bearer"));
         } catch (AuthenticationException exception) {
             return ResponseEntity.badRequest().body(exception.getMessage());
         }
 
     }
-
 }

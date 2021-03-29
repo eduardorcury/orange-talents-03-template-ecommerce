@@ -2,6 +2,7 @@ package br.com.zup.eduardoribeiro.mercadolivre.treinomercadolivre.compartilhado.
 
 import br.com.zup.eduardoribeiro.mercadolivre.treinomercadolivre.usuario.Usuario;
 import br.com.zup.eduardoribeiro.mercadolivre.treinomercadolivre.usuario.UsuarioRepository;
+import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -61,4 +62,22 @@ public class AutenticacaoService implements UserDetailsService {
 
     }
 
+    public boolean isTokenValid(String token) {
+
+        try {
+            Jwts.parser().setSigningKey(secret).parseClaimsJws(token);
+            return true;
+        } catch (Exception exception) {
+            return false;
+        }
+
+    }
+
+    public String getUsuarioLogin(String token) {
+
+        Assert.isTrue(isTokenValid(token), "Token inválido");
+        Claims claims = Jwts.parser().setSigningKey(secret).parseClaimsJws(token).getBody();
+        return claims.getSubject();
+
+    }
 }
