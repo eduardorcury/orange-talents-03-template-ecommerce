@@ -32,7 +32,6 @@ public class AutenticacaoFilter extends OncePerRequestFilter {
 
         String token = recuperarToken(request);
         boolean isValid = service.isTokenValid(token);
-
         if (isValid) {
             autenticarCliente(token);
         }
@@ -57,11 +56,9 @@ public class AutenticacaoFilter extends OncePerRequestFilter {
     private String recuperarToken(HttpServletRequest request) {
 
         String token = request.getHeader("Authorization");
-
         if (token == null || token.isBlank() || !token.startsWith("Bearer ")) {
             return null;
         }
-
         return token.substring(7);
 
     }

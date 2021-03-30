@@ -27,16 +27,13 @@ public class AutenticacaoService implements UserDetailsService {
     private String expiration;
 
     @Autowired
-    // 1
     private UsuarioRepository usuarioRepository;
 
     @Override
     public UserDetails loadUserByUsername(String login) throws UsernameNotFoundException {
 
-        // 2
         Optional<Usuario> usuarioOptional = usuarioRepository.findByLogin(login);
 
-        // 3
         if (usuarioOptional.isPresent()) {
             return usuarioOptional.get();
         }
