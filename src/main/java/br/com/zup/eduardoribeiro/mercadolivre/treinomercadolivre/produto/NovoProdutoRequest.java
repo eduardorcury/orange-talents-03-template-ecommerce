@@ -7,9 +7,10 @@ import org.hibernate.validator.constraints.Length;
 import org.springframework.util.Assert;
 
 import javax.persistence.EntityManager;
+import javax.validation.Valid;
 import javax.validation.constraints.*;
 import java.math.BigDecimal;
-import java.util.Map;
+import java.util.*;
 
 public class NovoProdutoRequest {
 
@@ -34,14 +35,15 @@ public class NovoProdutoRequest {
 
     @NotNull
     @Size(min = 3)
-    private Map<String, String> caracteristicas;
+    @Valid
+    private List<NovaCaracteristicaRequest> caracteristicas;
 
     public NovoProdutoRequest(@NotBlank String nome,
                               @NotNull @Positive BigDecimal valor,
                               @NotNull @PositiveOrZero Integer quantidade,
                               @NotBlank @Length(max = 1000) String descricao,
                               @NotNull Long categoriaId,
-                              @NotNull @Size(min = 3) Map<String, String> caracteristicas) {
+                              @NotNull @Size(min = 3) @Valid List<NovaCaracteristicaRequest> caracteristicas) {
         this.nome = nome;
         this.valor = valor;
         this.quantidade = quantidade;
@@ -62,5 +64,22 @@ public class NovoProdutoRequest {
         return new Produto(this.nome, this.valor, this.quantidade,
                 this.descricao, categoria, usuarioLogado, this.caracteristicas);
 
+    }
+
+    public Set<String> buscaCaracteristicasDuplicadas() {
+
+        HashSet<String> nomes = new HashSet<>();
+        HashSet<String> nomesDuplicados = new HashSet<>();
+        for (NovaCaracteristicaRequest caracteristica : this.caracteristicas) {
+            String nomeCaracteristica = caracteristica.getNome();
+            if (!nomes.add(nomeCaracteristica)) {
+                nomesDuplicados.add(nomeCaracteristica);
+            }
+        }
+        return nomesDuplicados;
+    }
+
+    public List<NovaCaracteristicaRequest> getCaracteristicas() {
+        return caracteristicas;
     }
 }

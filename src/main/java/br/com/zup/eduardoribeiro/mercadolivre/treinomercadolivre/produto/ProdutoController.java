@@ -5,13 +5,11 @@ import br.com.zup.eduardoribeiro.mercadolivre.treinomercadolivre.usuario.Usuario
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.WebDataBinder;
+import org.springframework.web.bind.annotation.*;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -28,14 +26,19 @@ public class ProdutoController {
     @Autowired
     private UsuarioRepository usuarioRepository;
 
+    @InitBinder
+    public void init(WebDataBinder binder) {
+        binder.addValidators(new CaracteristicasDuplicadasValidator());
+    }
+
     @PostMapping
     @Transactional
-    public ResponseEntity<?> cadastrar(@RequestBody @Valid NovoProdutoRequest request) {
+    public ResponseEntity<?> cadastrar(@RequestBody @Valid NovoProdutoRequest request,
+                                       @AuthenticationPrincipal String usuarioLogado) {
 
-        String emailUsuario = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        Assert.notNull(emailUsuario, "Nenhum usuário logado");
+        Assert.notNull(usuarioLogado, "Nenhum usuário logado");
 
-        Optional<Usuario> usuarioOptional = usuarioRepository.findByLogin(emailUsuario);
+        Optional<Usuario> usuarioOptional = usuarioRepository.findByLogin(usuarioLogado);
 
         if (usuarioOptional.isPresent()) {
             Produto produto = request.converterParaModel(entityManager, usuarioOptional.get());

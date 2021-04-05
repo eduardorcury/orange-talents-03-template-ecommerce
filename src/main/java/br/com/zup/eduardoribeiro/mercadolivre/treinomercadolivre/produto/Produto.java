@@ -3,12 +3,16 @@ package br.com.zup.eduardoribeiro.mercadolivre.treinomercadolivre.produto;
 import br.com.zup.eduardoribeiro.mercadolivre.treinomercadolivre.categoria.Categoria;
 import br.com.zup.eduardoribeiro.mercadolivre.treinomercadolivre.usuario.Usuario;
 import org.hibernate.validator.constraints.Length;
+import org.springframework.util.Assert;
 
 import javax.persistence.*;
+import javax.validation.Valid;
 import javax.validation.constraints.*;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.Map;
+import java.util.Collection;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Entity
 @Table(name = "produtos")
@@ -38,21 +42,19 @@ public class Produto {
     private String descricao;
 
     @NotNull
+    @Valid
     @ManyToOne(optional = false)
     private Categoria categoria;
 
     @NotNull
+    @Valid
     @ManyToOne(optional = false)
     private Usuario usuario;
 
     @NotNull
     @Size(min = 3)
-    @ElementCollection
-    @CollectionTable(name = "produtos_caracteristicas",
-            joinColumns = @JoinColumn(name = "produto_id", referencedColumnName = "id"))
-    @MapKeyColumn(name = "nome_caracteristica")
-    @Column(name = "valor_caracteristica")
-    private Map<String, String> caracteristicas;
+    @OneToMany(mappedBy = "produto", cascade = CascadeType.PERSIST)
+    private Set<Caracteristica> caracteristicas;
 
     @PastOrPresent
     @Column(nullable = false)
@@ -66,15 +68,17 @@ public class Produto {
                    @NotNull @Positive BigDecimal valor,
                    @NotNull @PositiveOrZero Integer quantidade,
                    @NotBlank @Length(max = 1000) String descricao,
-                   @NotNull Categoria categoria,
-                   @NotNull Usuario usuario,
-                   @NotNull @Size(min = 3) Map<String, String> caracteristicas) {
+                   @NotNull @Valid Categoria categoria,
+                   @NotNull @Valid Usuario usuario,
+                   @NotNull @Size(min = 3) Collection<NovaCaracteristicaRequest> caracteristicas) {
         this.nome = nome;
         this.valor = valor;
         this.quantidade = quantidade;
         this.descricao = descricao;
         this.categoria = categoria;
         this.usuario = usuario;
-        this.caracteristicas = caracteristicas;
+        this.caracteristicas = caracteristicas.stream().map(caracteristica ->
+                caracteristica.converterParaModel(this)).collect(Collectors.toSet());
+        Assert.isTrue(this.caracteristicas.size() >= 3, "O produto precisa ter no mínimo três características");
     }
 }
