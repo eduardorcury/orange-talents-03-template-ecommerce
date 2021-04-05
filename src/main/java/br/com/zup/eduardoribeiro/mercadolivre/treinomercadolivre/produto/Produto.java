@@ -1,6 +1,7 @@
 package br.com.zup.eduardoribeiro.mercadolivre.treinomercadolivre.produto;
 
 import br.com.zup.eduardoribeiro.mercadolivre.treinomercadolivre.categoria.Categoria;
+import br.com.zup.eduardoribeiro.mercadolivre.treinomercadolivre.produto.imagem.ImagemProduto;
 import br.com.zup.eduardoribeiro.mercadolivre.treinomercadolivre.usuario.Usuario;
 import org.hibernate.validator.constraints.Length;
 import org.springframework.util.Assert;
@@ -9,8 +10,11 @@ import javax.persistence.*;
 import javax.validation.Valid;
 import javax.validation.constraints.*;
 import java.math.BigDecimal;
+import java.net.URL;
 import java.time.LocalDateTime;
 import java.util.Collection;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -60,6 +64,9 @@ public class Produto {
     @Column(nullable = false)
     private LocalDateTime dataDeCriacao = LocalDateTime.now();
 
+    @OneToMany(mappedBy = "produto", cascade = CascadeType.MERGE)
+    private Set<ImagemProduto> imagens = new HashSet<>();
+
     @Deprecated
     public Produto() {
     }
@@ -80,5 +87,16 @@ public class Produto {
         this.caracteristicas = caracteristicas.stream().map(caracteristica ->
                 caracteristica.converterParaModel(this)).collect(Collectors.toSet());
         Assert.isTrue(this.caracteristicas.size() >= 3, "O produto precisa ter no mínimo três características");
+    }
+
+    public boolean pertenceAoUsuario(String usuarioLogin) {
+        return this.usuario.getUsername().equals(usuarioLogin);
+    }
+
+    public void associaImagens(Set<URL> links) {
+        this.imagens.addAll(links
+                .stream()
+                .map(link -> new ImagemProduto(link.toString(), this))
+                .collect(Collectors.toSet()));
     }
 }
