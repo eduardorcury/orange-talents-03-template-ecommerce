@@ -79,6 +79,10 @@ public class NovoProdutoRequest {
         return nomesDuplicados;
     }
 
+    public String getNome() {
+        return nome;
+    }
+
     public List<NovaCaracteristicaRequest> getCaracteristicas() {
         return caracteristicas;
     }
