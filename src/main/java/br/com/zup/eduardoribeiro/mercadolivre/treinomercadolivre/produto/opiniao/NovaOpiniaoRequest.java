@@ -1,12 +1,14 @@
 package br.com.zup.eduardoribeiro.mercadolivre.treinomercadolivre.produto.opiniao;
 
-import br.com.zup.eduardoribeiro.mercadolivre.treinomercadolivre.compartilhado.validation.ExisteEntidade;
 import br.com.zup.eduardoribeiro.mercadolivre.treinomercadolivre.produto.Produto;
 import br.com.zup.eduardoribeiro.mercadolivre.treinomercadolivre.usuario.Usuario;
 import org.hibernate.validator.constraints.Length;
 import org.springframework.util.Assert;
 
-import javax.validation.constraints.*;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 
 public class NovaOpiniaoRequest {
 
@@ -34,9 +36,6 @@ public class NovaOpiniaoRequest {
 
         Assert.notNull(usuario, "Usuário é obrigatório na criação de Opinião");
         Assert.notNull(produto, "Produto é obrigatório na criação de Opinião");
-
-        Assert.isTrue(produto.pertenceAoUsuario(usuario.getUsername()),
-                "Produto não pertence ao usuário informado");
 
         return new Opiniao(this.nota, this.descricao, this.titulo, produto, usuario);
 

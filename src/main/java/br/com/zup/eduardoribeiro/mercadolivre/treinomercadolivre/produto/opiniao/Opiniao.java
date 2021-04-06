@@ -53,8 +53,6 @@ public class Opiniao {
         this.nota = nota;
         this.titulo = titulo;
         this.descricao = descricao;
-        Assert.isTrue(produto.pertenceAoUsuario(usuario.getUsername()),
-                "Produto não pertence ao usuário informado");
         this.produto = produto;
         this.usuario = usuario;
     }

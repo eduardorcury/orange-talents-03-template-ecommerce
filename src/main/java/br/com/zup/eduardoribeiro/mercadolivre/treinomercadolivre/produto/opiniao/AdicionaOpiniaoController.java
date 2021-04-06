@@ -45,8 +45,6 @@ public class AdicionaOpiniaoController {
 
         if (produto == null) {
             return ResponseEntity.notFound().build();
-        } else if (!produto.pertenceAoUsuario(emailUsuario)) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
 
         Opiniao opiniao = request.converterParaModel(usuarioOptional.get(), produto);
