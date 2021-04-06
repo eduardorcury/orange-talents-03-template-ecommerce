@@ -89,6 +89,10 @@ public class Produto {
         Assert.isTrue(this.caracteristicas.size() >= 3, "O produto precisa ter no mínimo três características");
     }
 
+    public Set<ImagemProduto> getImagens() {
+        return imagens;
+    }
+
     public boolean pertenceAoUsuario(String usuarioLogin) {
         return this.usuario.getUsername().equals(usuarioLogin);
     }
