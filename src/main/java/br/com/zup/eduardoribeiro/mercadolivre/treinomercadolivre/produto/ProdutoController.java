@@ -1,5 +1,6 @@
 package br.com.zup.eduardoribeiro.mercadolivre.treinomercadolivre.produto;
 
+import br.com.zup.eduardoribeiro.mercadolivre.treinomercadolivre.produto.caracteristica.CaracteristicasDuplicadasValidator;
 import br.com.zup.eduardoribeiro.mercadolivre.treinomercadolivre.produto.imagem.NovasImagensRequest;
 import br.com.zup.eduardoribeiro.mercadolivre.treinomercadolivre.produto.imagem.UploaderDev;
 import br.com.zup.eduardoribeiro.mercadolivre.treinomercadolivre.usuario.Usuario;

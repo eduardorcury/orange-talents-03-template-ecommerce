@@ -1,4 +1,6 @@
-package br.com.zup.eduardoribeiro.mercadolivre.treinomercadolivre.produto;
+package br.com.zup.eduardoribeiro.mercadolivre.treinomercadolivre.produto.caracteristica;
+
+import br.com.zup.eduardoribeiro.mercadolivre.treinomercadolivre.produto.Produto;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;

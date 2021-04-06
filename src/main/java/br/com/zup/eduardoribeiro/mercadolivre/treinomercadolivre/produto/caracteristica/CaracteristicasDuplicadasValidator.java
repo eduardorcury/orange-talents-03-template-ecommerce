@@ -1,5 +1,6 @@
-package br.com.zup.eduardoribeiro.mercadolivre.treinomercadolivre.produto;
+package br.com.zup.eduardoribeiro.mercadolivre.treinomercadolivre.produto.caracteristica;
 
+import br.com.zup.eduardoribeiro.mercadolivre.treinomercadolivre.produto.NovoProdutoRequest;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
 

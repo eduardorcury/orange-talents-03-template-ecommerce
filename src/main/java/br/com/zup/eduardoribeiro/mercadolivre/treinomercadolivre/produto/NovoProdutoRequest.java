@@ -2,6 +2,7 @@ package br.com.zup.eduardoribeiro.mercadolivre.treinomercadolivre.produto;
 
 import br.com.zup.eduardoribeiro.mercadolivre.treinomercadolivre.categoria.Categoria;
 import br.com.zup.eduardoribeiro.mercadolivre.treinomercadolivre.compartilhado.validation.ExisteEntidade;
+import br.com.zup.eduardoribeiro.mercadolivre.treinomercadolivre.produto.caracteristica.NovaCaracteristicaRequest;
 import br.com.zup.eduardoribeiro.mercadolivre.treinomercadolivre.usuario.Usuario;
 import org.hibernate.validator.constraints.Length;
 import org.springframework.util.Assert;

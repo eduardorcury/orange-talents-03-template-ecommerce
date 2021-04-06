@@ -1,6 +1,8 @@
 package br.com.zup.eduardoribeiro.mercadolivre.treinomercadolivre.produto;
 
 import br.com.zup.eduardoribeiro.mercadolivre.treinomercadolivre.categoria.Categoria;
+import br.com.zup.eduardoribeiro.mercadolivre.treinomercadolivre.produto.caracteristica.Caracteristica;
+import br.com.zup.eduardoribeiro.mercadolivre.treinomercadolivre.produto.caracteristica.NovaCaracteristicaRequest;
 import br.com.zup.eduardoribeiro.mercadolivre.treinomercadolivre.produto.imagem.ImagemProduto;
 import br.com.zup.eduardoribeiro.mercadolivre.treinomercadolivre.usuario.Usuario;
 import org.hibernate.validator.constraints.Length;
@@ -14,7 +16,6 @@ import java.net.URL;
 import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 

@@ -1,5 +1,7 @@
 package br.com.zup.eduardoribeiro.mercadolivre.treinomercadolivre.produto;
 
+import br.com.zup.eduardoribeiro.mercadolivre.treinomercadolivre.produto.caracteristica.CaracteristicasDuplicadasValidator;
+import br.com.zup.eduardoribeiro.mercadolivre.treinomercadolivre.produto.caracteristica.NovaCaracteristicaRequest;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;

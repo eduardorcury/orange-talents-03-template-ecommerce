@@ -1,6 +1,7 @@
 package br.com.zup.eduardoribeiro.mercadolivre.treinomercadolivre.produto;
 
 import br.com.zup.eduardoribeiro.mercadolivre.treinomercadolivre.categoria.Categoria;
+import br.com.zup.eduardoribeiro.mercadolivre.treinomercadolivre.produto.caracteristica.NovaCaracteristicaRequest;
 import br.com.zup.eduardoribeiro.mercadolivre.treinomercadolivre.usuario.Usuario;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
