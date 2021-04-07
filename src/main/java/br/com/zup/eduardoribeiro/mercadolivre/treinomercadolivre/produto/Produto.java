@@ -4,7 +4,10 @@ import br.com.zup.eduardoribeiro.mercadolivre.treinomercadolivre.categoria.Categ
 import br.com.zup.eduardoribeiro.mercadolivre.treinomercadolivre.produto.caracteristica.Caracteristica;
 import br.com.zup.eduardoribeiro.mercadolivre.treinomercadolivre.produto.caracteristica.NovaCaracteristicaRequest;
 import br.com.zup.eduardoribeiro.mercadolivre.treinomercadolivre.produto.imagem.ImagemProduto;
+import br.com.zup.eduardoribeiro.mercadolivre.treinomercadolivre.produto.opiniao.Opiniao;
+import br.com.zup.eduardoribeiro.mercadolivre.treinomercadolivre.produto.pergunta.Pergunta;
 import br.com.zup.eduardoribeiro.mercadolivre.treinomercadolivre.usuario.Usuario;
+import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.validator.constraints.Length;
 import org.springframework.util.Assert;
 
@@ -14,9 +17,8 @@ import javax.validation.constraints.*;
 import java.math.BigDecimal;
 import java.net.URL;
 import java.time.LocalDateTime;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 @Entity
@@ -56,17 +58,24 @@ public class Produto {
     @ManyToOne(optional = false)
     private Usuario usuario;
 
+    @PastOrPresent
+    @CreationTimestamp
+    @Column(nullable = false)
+    private LocalDateTime dataDeCriacao = LocalDateTime.now();
+
     @NotNull
     @Size(min = 3)
     @OneToMany(mappedBy = "produto", cascade = CascadeType.PERSIST)
     private Set<Caracteristica> caracteristicas;
 
-    @PastOrPresent
-    @Column(nullable = false)
-    private LocalDateTime dataDeCriacao = LocalDateTime.now();
-
     @OneToMany(mappedBy = "produto", cascade = CascadeType.MERGE)
     private Set<ImagemProduto> imagens = new HashSet<>();
+
+    @OneToMany(mappedBy = "produto")
+    private List<Opiniao> opinioes = new ArrayList<>();
+
+    @OneToMany(mappedBy = "produto")
+    private List<Pergunta> perguntas = new ArrayList<>();
 
     @Deprecated
     public Produto() {
@@ -94,6 +103,14 @@ public class Produto {
         return nome;
     }
 
+    public BigDecimal getValor() {
+        return valor;
+    }
+
+    public String getDescricao() {
+        return descricao;
+    }
+
     public Set<ImagemProduto> getImagens() {
         return imagens;
     }
@@ -108,4 +125,46 @@ public class Produto {
                 .map(link -> new ImagemProduto(link.toString(), this))
                 .collect(Collectors.toSet()));
     }
+
+    public <R> Set<R> converteImagens(Function<ImagemProduto, R> funcao) {
+        return this.imagens
+                .stream()
+                .map(funcao)
+                .collect(Collectors.toSet());
+    }
+
+    public <R> Set<R> converteCaracteristica(Function<Caracteristica, R> funcao) {
+        return this.caracteristicas
+                .stream()
+                .map(funcao)
+                .collect(Collectors.toSet());
+    }
+
+    public <R> List<R> converteOpiniao(Function<Opiniao, R> funcao) {
+        return this.opinioes
+                .stream()
+                .map(funcao)
+                .collect(Collectors.toList());
+    }
+
+    public <R> List<R> convertePergunta(Function<Pergunta, R> funcao) {
+        return this.perguntas
+                .stream()
+                .map(funcao)
+                .collect(Collectors.toList());
+    }
+
+    public Double calculaMediaNotas() {
+        return this.opinioes
+                .stream()
+                .map(Opiniao::getNota)
+                .mapToInt(value -> value)
+                .average()
+                .orElse(0.0);
+    }
+
+    public Integer retornaTotalDeNotas() {
+        return this.opinioes.size();
+    }
+
 }

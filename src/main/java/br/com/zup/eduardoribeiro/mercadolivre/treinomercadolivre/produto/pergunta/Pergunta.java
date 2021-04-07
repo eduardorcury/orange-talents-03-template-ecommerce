@@ -39,6 +39,10 @@ public class Pergunta {
     @ManyToOne(optional = false)
     private Produto produto;
 
+    @Deprecated
+    public Pergunta() {
+    }
+
     public Pergunta(@NotBlank String titulo,
                     @NotNull @Valid Usuario usuario,
                     @NotNull @Valid Produto produto) {
