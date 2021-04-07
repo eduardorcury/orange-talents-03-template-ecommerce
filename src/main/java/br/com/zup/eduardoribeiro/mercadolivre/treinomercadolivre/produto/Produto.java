@@ -115,6 +115,10 @@ public class Produto {
         return imagens;
     }
 
+    public List<Opiniao> getOpinioes() {
+        return opinioes;
+    }
+
     public boolean pertenceAoUsuario(String usuarioLogin) {
         return this.usuario.getUsername().equals(usuarioLogin);
     }

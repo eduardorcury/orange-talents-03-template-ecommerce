@@ -2,9 +2,11 @@ package br.com.zup.eduardoribeiro.mercadolivre.treinomercadolivre.produto;
 
 import br.com.zup.eduardoribeiro.mercadolivre.treinomercadolivre.categoria.Categoria;
 import br.com.zup.eduardoribeiro.mercadolivre.treinomercadolivre.produto.caracteristica.NovaCaracteristicaRequest;
+import br.com.zup.eduardoribeiro.mercadolivre.treinomercadolivre.produto.opiniao.Opiniao;
 import br.com.zup.eduardoribeiro.mercadolivre.treinomercadolivre.usuario.Usuario;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -23,11 +25,22 @@ class ProdutoTest {
 
     static Categoria categoria;
     static Usuario usuario;
+    static Produto produtoValido;
+    static Collection<NovaCaracteristicaRequest> caracteristicasValidas;
 
     @BeforeAll
     static void setUp() {
         categoria = new Categoria("categoria");
         usuario = new Usuario("usuario@gmail.com", "senhausuario");
+        caracteristicasValidas = List.of(new NovaCaracteristicaRequest("Caracteristica 1", "Descrição 1"),
+                new NovaCaracteristicaRequest("Caracteristica 2", "Descrição 2"),
+                new NovaCaracteristicaRequest("Caracteristica 3", "Descrição 3"));
+    }
+
+    @BeforeEach
+    void beforeEach() {
+        produtoValido = new Produto("nome", BigDecimal.ONE, 5, "descrição",
+                categoria, usuario, caracteristicasValidas);
     }
 
     @ParameterizedTest
@@ -53,17 +66,17 @@ class ProdutoTest {
     @MethodSource("criaURLs")
     void deveAdicionarImagensAoProduto(int tamanho, Set<URL> links) {
 
-        Collection<NovaCaracteristicaRequest> caracteristicas =
-                List.of(new NovaCaracteristicaRequest("Caracteristica 1", "Descrição 1"),
-                        new NovaCaracteristicaRequest("Caracteristica 2", "Descrição 2"),
-                        new NovaCaracteristicaRequest("Caracteristica 3", "Descrição 3"));
+        produtoValido.associaImagens(links);
+        assertEquals(tamanho, produtoValido.getImagens().size());
 
-        Produto produto = new Produto("nome", BigDecimal.ONE, 5, "descrição",
-                categoria, usuario, caracteristicas);
+    }
 
-        produto.associaImagens(links);
+    @ParameterizedTest
+    @MethodSource("criaOpinioes")
+    void deveCalcularMedia(Double media, List<Opiniao> opinioes) {
 
-        assertEquals(tamanho, produto.getImagens().size());
+        produtoValido.getOpinioes().addAll(opinioes);
+        assertEquals(media, produtoValido.calculaMediaNotas());
 
     }
 
@@ -98,4 +111,13 @@ class ProdutoTest {
                         new URL("http://teste2.com"),
                         new URL("http://teste3.com"))));
     }
+
+    private static Stream<Arguments> criaOpinioes() {
+        return Stream.of(
+                Arguments.of(0.0, List.of()),
+                Arguments.of(3.0, List.of(new Opiniao(3, "titulo", "descricao", produtoValido, usuario))),
+                Arguments.of(2.5, List.of(new Opiniao(5, "titulo", "descricao", produtoValido, usuario),
+                        new Opiniao(0, "titulo", "descricao", produtoValido, usuario))));
+    }
+
 }
