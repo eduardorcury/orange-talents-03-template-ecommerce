@@ -47,7 +47,7 @@ public class AutenticacaoFilter extends OncePerRequestFilter {
 
         if (usuarioOptional.isPresent()) {
             UsernamePasswordAuthenticationToken usuarioLogado = new UsernamePasswordAuthenticationToken(
-                            usuarioOptional.get().getUsername(), null, usuarioOptional.get().getAuthorities());
+                            usuarioOptional.get(), null, usuarioOptional.get().getAuthorities());
             SecurityContextHolder.getContext().setAuthentication(usuarioLogado);
         } else throw new UsernameNotFoundException("Usuário não encontrado");
 

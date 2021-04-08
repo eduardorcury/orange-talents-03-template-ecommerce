@@ -12,6 +12,7 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.PastOrPresent;
 import java.time.LocalDateTime;
 import java.util.Collection;
+import java.util.Objects;
 import java.util.regex.Pattern;
 
 @Entity
@@ -96,5 +97,18 @@ public class Usuario implements UserDetails {
     @Override
     public boolean isEnabled() {
         return true;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Usuario usuario = (Usuario) o;
+        return id.equals(usuario.id) && dataDeCriacao.equals(usuario.dataDeCriacao) && login.equals(usuario.login) && senha.equals(usuario.senha);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, dataDeCriacao, login, senha);
     }
 }

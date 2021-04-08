@@ -119,8 +119,8 @@ public class Produto {
         return opinioes;
     }
 
-    public boolean pertenceAoUsuario(String usuarioLogin) {
-        return this.usuario.getUsername().equals(usuarioLogin);
+    public boolean pertenceAoUsuario(Usuario usuarioLogado) {
+        return this.usuario.equals(usuarioLogado);
     }
 
     public void associaImagens(Set<URL> links) {
@@ -170,5 +170,4 @@ public class Produto {
     public Integer retornaTotalDeNotas() {
         return this.opinioes.size();
     }
-
 }

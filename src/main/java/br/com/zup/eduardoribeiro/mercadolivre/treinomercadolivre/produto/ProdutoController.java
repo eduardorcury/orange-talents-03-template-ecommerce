@@ -29,9 +29,6 @@ public class ProdutoController {
     private EntityManager entityManager;
 
     @Autowired
-    private UsuarioRepository usuarioRepository;
-
-    @Autowired
     private UploaderDev uploader;
 
     @InitBinder(value = "novoProdutoRequest")
@@ -42,26 +39,21 @@ public class ProdutoController {
     @PostMapping
     @Transactional
     public ResponseEntity<?> cadastrar(@RequestBody @Valid NovoProdutoRequest request,
-                                       @AuthenticationPrincipal String usuarioLogado) {
+                                       @AuthenticationPrincipal Usuario usuarioLogado) {
 
         Assert.notNull(usuarioLogado, "Nenhum usuário logado");
-        Optional<Usuario> usuarioOptional = usuarioRepository.findByLogin(usuarioLogado);
 
-        if (usuarioOptional.isPresent()) {
-            Produto produto = request.converterParaModel(entityManager, usuarioOptional.get());
-            entityManager.persist(produto);
-            return ResponseEntity.ok().build();
-        } else {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
-        }
+        Produto produto = request.converterParaModel(entityManager, usuarioLogado);
+        entityManager.persist(produto);
+        return ResponseEntity.ok().build();
 
     }
 
-    @PostMapping(value = "/{id}/imagens")
+    @PostMapping(value = "/{id:^[0-9]*$}/imagens")
     @Transactional
     public ResponseEntity<?> adicionaImagem(@Valid NovasImagensRequest request,
                                             @PathVariable(name = "id") Long produtoId,
-                                            @AuthenticationPrincipal String usuarioLogado) {
+                                            @AuthenticationPrincipal Usuario usuarioLogado) {
 
         Assert.notNull(usuarioLogado, "Nenhum usuário logado");
 

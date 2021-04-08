@@ -27,23 +27,15 @@ public class EnviaPerguntaController {
     private EntityManager entityManager;
 
     @Autowired
-    private UsuarioRepository usuarioRepository;
-
-    @Autowired
     private Emails emails;
 
-    @PostMapping("/produtos/{id}/perguntas")
+    @PostMapping("/produtos/{id:^[0-9]*$}/perguntas")
     @Transactional
     public ResponseEntity<?> enviaPergunta(@PathVariable(value = "id") Long produtoId,
                                            @RequestBody @Valid NovaPerguntaRequest request,
-                                           @AuthenticationPrincipal String emailUsuario) {
+                                           @AuthenticationPrincipal Usuario usuarioLogado) {
 
-        Assert.notNull(emailUsuario, "Nenhum usuário logado");
-        Optional<Usuario> usuarioOptional = usuarioRepository.findByLogin(emailUsuario);
-
-        if (usuarioOptional.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
-        }
+        Assert.notNull(usuarioLogado, "Nenhum usuário logado");
 
         Produto produto = entityManager.find(Produto.class, produtoId);
 
@@ -51,7 +43,7 @@ public class EnviaPerguntaController {
             return ResponseEntity.notFound().build();
         }
 
-        Pergunta pergunta = request.converterParaModel(usuarioOptional.get(), produto);
+        Pergunta pergunta = request.converterParaModel(usuarioLogado, produto);
         entityManager.persist(pergunta);
         emails.enviaEmailNovaPergunta(pergunta);
         return ResponseEntity.ok().build();
