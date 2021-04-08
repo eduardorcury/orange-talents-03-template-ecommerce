@@ -179,8 +179,9 @@ public class Produto {
         return this.opinioes.size();
     }
 
-    public boolean abateEstoque(Integer pedido) {
+    public boolean abateEstoque(@NotNull @Positive Integer pedido) {
 
+        Assert.isTrue(pedido > 0, "Quantidade deve ser positiva");
         if (this.quantidade < pedido) {
             return false;
         }

@@ -8,8 +8,6 @@ import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
 import java.math.BigDecimal;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.UUID;
 
 @Entity
@@ -54,6 +52,11 @@ public class Compra {
     @Column(nullable = false)
     private StatusDaCompra statusDaCompra = StatusDaCompra.INICIADA;
 
+    @Deprecated
+    public Compra() {
+
+    }
+
     public Compra(@NotNull @Positive Integer quantidade,
                   @NotNull Gateway gateway,
                   @NotNull @Valid Produto produto,
@@ -65,11 +68,12 @@ public class Compra {
         this.usuario = usuario;
     }
 
-    public String retornaUrl() {
-        return String.format("%s.com?%s=%s&redirectUrl=%s",
+    public String geraUrlDaCompra() {
+        return String.format("%s.com?%s=%s&redirectUrl=/retorno/%s",
                 this.gateway.name().toLowerCase(),
                 this.gateway == Gateway.PAYPAL ? "buyerId" : "returnId",
-                this.codigoDaCompra.toString(), "teste");
+                this.codigoDaCompra.toString(),
+                this.id.toString());
     }
 
     public Produto getProduto() {
@@ -79,5 +83,4 @@ public class Compra {
     public Integer getQuantidade() {
         return quantidade;
     }
-
 }

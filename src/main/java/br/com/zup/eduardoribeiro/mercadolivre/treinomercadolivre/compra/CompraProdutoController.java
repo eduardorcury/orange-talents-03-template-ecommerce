@@ -16,7 +16,6 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.transaction.Transactional;
 import javax.validation.Valid;
-import java.net.MalformedURLException;
 
 @RestController
 public class CompraProdutoController {
@@ -40,18 +39,16 @@ public class CompraProdutoController {
             return ResponseEntity.notFound().build();
         }
 
-        Compra compra = request.converterParaModel(usuarioLogado, produto);
-
-        if (!produto.abateEstoque(compra.getQuantidade())) {
+        if (!produto.abateEstoque(request.getQuantidade())) {
             return ResponseEntity.badRequest()
                     .body("Parece que não há quantidade suficiente desse produto");
         }
 
+        Compra compra = request.converterParaModel(usuarioLogado, produto);
         entityManager.persist(compra);
-        entityManager.persist(produto);
 
         emails.enviaEmailNovaCompra(compra);
-        return ResponseEntity.status(302).body(compra.retornaUrl());
+        return ResponseEntity.status(302).body(compra.geraUrlDaCompra());
 
     }
 }
