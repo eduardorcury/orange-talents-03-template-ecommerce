@@ -119,6 +119,14 @@ public class Produto {
         return opinioes;
     }
 
+    public Integer getQuantidade() {
+        return quantidade;
+    }
+
+    public String retornaEmailDoUsuario() {
+        return this.usuario.getUsername();
+    }
+
     public boolean pertenceAoUsuario(Usuario usuarioLogado) {
         return this.usuario.equals(usuarioLogado);
     }
@@ -170,4 +178,16 @@ public class Produto {
     public Integer retornaTotalDeNotas() {
         return this.opinioes.size();
     }
+
+    public boolean abateEstoque(Integer pedido) {
+
+        if (this.quantidade < pedido) {
+            return false;
+        }
+
+        this.quantidade -= pedido;
+        return true;
+
+    }
+
 }
