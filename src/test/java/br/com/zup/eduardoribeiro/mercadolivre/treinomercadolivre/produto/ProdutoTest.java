@@ -20,6 +20,7 @@ import java.util.Set;
 import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class ProdutoTest {
 
@@ -80,6 +81,21 @@ class ProdutoTest {
 
     }
 
+    @ParameterizedTest
+    @MethodSource("criaEstoquesEQuantidades")
+    void deveValidarCompraPeloEstoque(Integer estoque, Integer quantidadePedida, boolean resultado) {
+        Produto produto = new Produto("nome", BigDecimal.ONE, estoque, "descrição",
+                categoria, usuario, caracteristicasValidas);
+        boolean abateu = produto.abateEstoque(quantidadePedida);
+        assertEquals(resultado, abateu);
+    }
+
+    @ParameterizedTest
+    @MethodSource("criaQuantidadesInvalidas")
+    void naoDeveCalcularQuantidadeInvalida(Integer quantidadePedida) {
+        assertThrows(IllegalArgumentException.class, () -> produtoValido.abateEstoque(quantidadePedida));
+    }
+
     private static Stream<Arguments> tresOuMaisCaracteristicas() {
         return Stream.of(
                 Arguments.of(List.of(new NovaCaracteristicaRequest("Caracteristica 1", "Descrição 1"),
@@ -120,4 +136,16 @@ class ProdutoTest {
                         new Opiniao(0, "titulo", "descricao", produtoValido, usuario))));
     }
 
+    private static Stream<Arguments> criaEstoquesEQuantidades() {
+        return Stream.of(
+                Arguments.of(1, 1, true),
+                Arguments.of(5, 2, true),
+                Arguments.of(1, 5, false),
+                Arguments.of(3, 7, false)
+        );
+    }
+
+    private static Stream<Integer> criaQuantidadesInvalidas() {
+        return Stream.of(0, -1, -100);
+    }
 }
