@@ -99,6 +99,10 @@ public class Produto {
         Assert.isTrue(this.caracteristicas.size() >= 3, "O produto precisa ter no mínimo três características");
     }
 
+    public Long getId() {
+        return id;
+    }
+
     public String getNome() {
         return nome;
     }
@@ -125,6 +129,10 @@ public class Produto {
 
     public String retornaEmailDoUsuario() {
         return this.usuario.getUsername();
+    }
+
+    public Long retornaUsuarioId() {
+        return this.usuario.getId();
     }
 
     public boolean pertenceAoUsuario(Usuario usuarioLogado) {

@@ -39,4 +39,25 @@ public class Emails {
 
     }
 
+    public void enviarEmailConfirmacaoPagamento(Compra compra) {
+
+        String corpo = String.format("A sua compra do produto %s foi confirmada!",
+                compra.getProduto().getNome());
+        String assunto = "Compra confirmada";
+
+        enviadorDeEmail.enviar(corpo, assunto, "Mercado Livre",
+                "apimercadolivre@gmail.com", compra.getUsuario().getUsername());
+
+    }
+
+    public void enviarEmailFalhaPagamento(Compra compra) {
+
+        String corpo = String.format("Seu pagamento não foi aceito :( Tente de novo aqui: " +
+                        "localhost:8080/produtos/%s", compra.getProduto().getId().toString());
+        String assunto = "Pagamento não foi aceito";
+
+        enviadorDeEmail.enviar(corpo, assunto, "Mercado Livre",
+                "apimercadolivre@gmail.com", compra.getUsuario().getUsername());
+
+    }
 }
